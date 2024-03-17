@@ -1,0 +1,2 @@
+# SHELL
+zsh script projects
