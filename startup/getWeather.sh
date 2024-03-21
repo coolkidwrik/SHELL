@@ -4,8 +4,6 @@
 ############################################
 function get_weather {
     # by not providing a location, the API will use the user's IP address to get the weather
-    echo 
-    echo
     # -s flag is used to suppress the progress bar
     weather=$(curl -s "wttr.in/?1")
     echo "$weather"
