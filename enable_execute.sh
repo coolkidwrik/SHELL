@@ -5,6 +5,17 @@ file=$1
 
 # helper function
 ############################################
+# error check
+function errorCheck {
+    # check if the number of arguments is correct
+    if [ $# -ne 1 ]
+    then
+        echo "Usage: enable_execute.sh <file>"
+        exit 1
+    fi
+}
+
+
 # function to check if a file is executable
 function quarantine_off {
     # check if quarantine attribute is set
@@ -31,6 +42,7 @@ function set_executable {
 ############################################
 
 # main
+errorCheck $file
 # check if file exists
 if [ -f $file ]; then
     # check if quarantine attribute is set
