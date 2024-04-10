@@ -4,6 +4,7 @@
 # takes 1 argument - the number of sides on the dice
 # generates a random number between 1 and the number of sides
 # prints the result
+# stores the result in a file
 
 # get first argument
 side=$1
@@ -30,7 +31,7 @@ function errorCheck {
 
 # rolling dice
 function rolling {
-    for i in {1..10}
+    for i in {1..8}
     do
         echo -n "*        "
         sleep 0.5
@@ -40,9 +41,10 @@ function rolling {
  
 # rollDice
 function rollDice {
-  # generate random number between 1 and $side
-  result=$((RANDOM % $side + 1))
-  echo "You rolled a $result"
+    # generate random number between 1 and $side and writes it to a file
+    result=$((RANDOM % $side + 1))
+    echo "You rolled a $result"
+    echo "$result" > rollResult.txt
 }
 ############################################
 
