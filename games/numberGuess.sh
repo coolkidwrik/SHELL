@@ -22,6 +22,49 @@ function intro {
     read response
 }
 
+function choose_difficulty {
+    echo "Choose a difficulty level"
+    echo "1. Easy"
+    echo "2. Medium"
+    echo "3. Hard"
+    read level
+    case $level in
+        1)
+            echo "You have chosen easy\n"
+            difficulty=10
+            ;;
+        nice | 69)
+            echo "You have chosen 'NICE'\n"
+            difficulty=69
+            ;;
+        2)
+            echo "You have chosen medium\n"
+            difficulty=100
+            ;;
+        3)
+            echo "You have chosen hard\n"
+            difficulty=1000
+            ;;
+        "ez money")
+            # bonus level 2
+            echo "You have chosen impossible\n"
+            echo "since u think it's ez money, I'll make it impossible for you\n"
+            echo "Good luck 😂"
+            difficulty=1729 # Ramanujan's number
+            ;;
+        "emotional damage")
+            # bonus level 3
+            echo "You have chosen DEATH\n"
+            echo "you are a brave soul\n"
+            difficulty=100000
+            ;;
+        *)
+            echo "Invalid choice\n"
+            choose_difficulty # recursive call back
+            ;;
+    esac
+}
+
 
 function give_hint {
     # number to guess
@@ -39,9 +82,9 @@ function give_hint {
 
 ############################################
 # local variables
+readonly ATEMPTS=5
 correct=0
 total=0
-ATEMPTS=5
 
 # call introducton to the game
 intro
@@ -57,12 +100,14 @@ echo
 sleep 1
 while [ $response = "y" ]
 do
+    # get difficulty level
+    choose_difficulty
     # generate the random number
-    num=$(($RANDOM % 100))
+    num=$(($RANDOM % difficulty+1))
     # increment the total number of games played
     (( total++ ))
     # game here
-    echo "I'm thinking of a number between 1 and 100"
+    echo "I'm thinking of a number between 1 and $difficulty"
     echo "you will have $ATEMPTS attempts to guess the number"
     sleep 0.5
     echo "Good luck!"

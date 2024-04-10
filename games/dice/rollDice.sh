@@ -20,7 +20,7 @@ function errorCheck {
         exit 1
     fi
 
-    # check if the argument is a number
+    # check if the argument is greater than 1
     if [ $side -lt 2 ]
     then
         echo "Error: Number of sides must be at least 2"
@@ -40,6 +40,7 @@ function rolling {
 }
  
 # rollDice
+# note for self: > overwrites the file, >> appends to the file           
 function rollDice {
     # generate random number between 1 and $side and writes it to a file
     result=$((RANDOM % $side + 1))
