@@ -17,25 +17,46 @@
 
 # The array will be written back to the file
 
+# import colors
+source ./color.sh
+
 # Variables:
 ############################################
 declare -a todo_list
 
 # Helper Functions:
 ############################################
+# restore the list from the file
+function restore_list {
+    if [ -f todo.txt ]
+    then
+        # Read the file into the array
+        while IFS= read -r line; do
+            todo_list+=("$line")
+        done < todo.txt
+    else
+        # Create the file
+        touch todo.txt
+    fi
+}
+
+
 # Function to display the list
 function display_list {
     if [ ${#todo_list[@]} -eq 0 ]
     then
-        echo "The list is empty"
+        echo "${Green}The list is empty"
         echo "\n"
     else
+        echo "${UGreen}To Do List${Green}"
         for i in {1..${#todo_list[@]}}
         do
             echo "$i. ${todo_list[$i]}"
         done
-        echo "\n\n"
+        echo "\n"
     fi
+    echo "${Color_Off}"
+    read "?Press enter to continue"
 }
 
 # Function to add an item to the list
@@ -63,12 +84,11 @@ function remove_item {
 }
 
 function display_menu {
-    echo "Welcome to the todo list manager"
-    echo "Choose one of the following options"
+    echo "Choose one of the following options ${IYellow}"
     echo "1. Display the list"
     echo "2. Add an item"
     echo "3. Remove an item"
-    echo "4. Exit"
+    echo "4. Exit ${Color_Off}"
     read "option?Enter your choice: "
 }
 
@@ -85,14 +105,13 @@ function handle_options {
             ;;
         4)
             # truncate the file
-            # truncate -s 0 todo.txt
             # The colon symbol (:) is typically used as a placeholder or null command in shell scripting and produces no output.
             : > todo.txt
 
             # Write the array back to the file
             for item in "${todo_list[@]}"
             do
-                echo "$item" >> todo.txt # append item to the file
+                echo "$item" >> todo.txt # append item to the file (this apparently adds a newline character to the end of the item)
             done
             ;;
         *)
@@ -105,17 +124,9 @@ function handle_options {
 # Main Script:
 ############################################
 # Check if the file exists
-if [ -f todo.txt ]
-then
-    # Read the file into the array
-    while IFS= read -r line; do
-        todo_list+=("$line")
-    done < todo.txt
-else
-    # Create the file
-    touch todo.txt
-fi
+restore_list
 
+echo "Welcome to the todo list manager"
 while true 
 do
     display_menu

@@ -3,6 +3,11 @@
 # Description:
 #-----------------------
 # list out the local todo list
+# this removes the user input and interaction
+# the goal is to simply display the list
+
+# import colors
+source ./color.sh
 
 # Variables:
 ############################################
@@ -12,26 +17,32 @@ declare -a todo_list
 ############################################
 # Function to display the list
 function display_list {
+    echo "${UGreen}To Do List${IPurple}"
     if [ ${#todo_list[@]} -eq 0 ]
     then
-        echo "The list is empty"
+        echo "${BIYellow}Nothing to do!${Color_Off} 🥳"
+        echo "\n"
     else
-        for i in ${#todo_list[@]}
+        for i in {1..${#todo_list[@]}}
         do
-            echo "$i. ${todo_list[$i]}\n"
+            echo "$i. ${todo_list[$i]}"
         done
+        echo "${Color_Off}\n"
     fi
 }
 
 # Main:
 ############################################
-# load the list
-if [-f todo.txt]
+# Check if the file exists
+if [ -f todo.txt ]
 then
-    todo_list=($(cat todo.txt))
+    # Read the file into the array
+    while IFS= read -r line; do
+        todo_list+=("$line")
+    done < todo.txt
 else
-    echo "no todo list found" 
-    exit 1
+    # Create the file
+    touch todo.txt
 fi
 
 display_list
