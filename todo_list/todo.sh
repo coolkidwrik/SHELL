@@ -28,26 +28,31 @@ function display_list {
     if [ ${#todo_list[@]} -eq 0 ]
     then
         echo "The list is empty"
+        echo "\n"
     else
-        for i in ${#todo_list[@]}
+        for i in {1..${#todo_list[@]}}
         do
             echo "$i. ${todo_list[$i]}"
         done
+        echo "\n\n"
     fi
 }
 
 # Function to add an item to the list
 function add_item {
-    read "item?Enter the item: "
-    todo_list+=($item)
+    read "item_add?Enter the item: "
+    todo_list+=($item_add)
 }
 
 # Function to remove an item from the list
 function remove_item {
-    read "item?Enter the item number: "
-    if [ $item -gt 0 ] && [ $item -le ${#todo_list[@]} ]
+    read "item_num?Enter the item number: "
+    if [ $item_num -gt 0 ] && [ $item_num -le ${#todo_list[@]} ]
     then
-        unset todo_list[$item]
+        # get the index of the item
+        index=$(($item_num - 1))
+        echo "Removing ${todo_list[$index]}"
+        unset todo_list[$index]
     else
         echo "Invalid item number"
     fi
@@ -75,8 +80,15 @@ function handle_options {
             remove_item
             ;;
         4)
+            # truncate the file
+            # truncate -s 0 todo.txt
+            : > todo.txt
+
             # Write the array back to the file
-            echo ${todo_list[@]} > todo.txt
+            for item in "${todo_list[@]}"
+            do
+                echo "$item" >> todo.txt # append item to the file
+            done
             ;;
         *)
             echo "Invalid choice"
@@ -87,11 +99,13 @@ function handle_options {
 
 # Main Script:
 ############################################
-Check if the file exists
+# Check if the file exists
 if [ -f todo.txt ]
 then
     # Read the file into the array
-    todo_list=($(cat todo.txt))
+    while IFS= read -r line; do
+        todo_list+=("$line")
+    done < todo.txt
 else
     # Create the file
     touch todo.txt
@@ -106,4 +120,3 @@ do
         break
     fi
 done
-
