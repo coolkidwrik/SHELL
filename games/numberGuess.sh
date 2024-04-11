@@ -8,58 +8,62 @@
 # if the user fails to guess the number, they are told the number
 # get users name
 
+# import colors
+source ./color.sh
+
 ############################################
 # helper function
 ############################################
 function intro {
     user=$(whoami)
-    echo "Hello $user, welcome to the number guessing game"
+    echo "Hello $user, welcome to ${BIYellow}the number guessing game${Color_Off}"
     sleep 0.5
-    echo "what would you like to be called?"
+    echo "what would you like to be called?${On_IPurple}"
     read name
-    echo "Alright $name, let's play a game"
+    echo "${Color_Off}"
+    echo "Alright ${UPurple}$name${Color_Off}, let's play a game"
     echo "do you want to play a game? (y/n)?"
     read response
 }
 
 function choose_difficulty {
-    echo "Choose a difficulty level"
+    echo "Choose a difficulty level${Blue}"
     echo "1. Easy"
     echo "2. Medium"
     echo "3. Hard"
     read level
     case $level in
         1)
-            echo "You have chosen easy\n"
+            echo "${Color_Off}You have chosen ${Blue}easy${Color_Off}\n"
             difficulty=10
             ;;
         nice | 69)
-            echo "You have chosen 'NICE'\n"
+            echo "${Color_Off}You have chosen ${Purple}'NICE'${Color_Off}\n"
             difficulty=69
             ;;
         2)
-            echo "You have chosen medium\n"
+            echo "${Color_Off}You have chosen ${Blue}medium${Color_Off}\n"
             difficulty=100
             ;;
         3)
-            echo "You have chosen hard\n"
+            echo "${Color_Off}You have chosen ${Blue}hard${Color_Off}\n"
             difficulty=1000
             ;;
         "ez money")
             # bonus level 2
-            echo "You have chosen impossible\n"
+            echo "${Color_Off}You have chosen ${Red}impossible${Color_Off}\n"
             echo "since u think it's ez money, I'll make it impossible for you\n"
             echo "Good luck 😂"
             difficulty=1729 # Ramanujan's number
             ;;
         "emotional damage")
             # bonus level 3
-            echo "You have chosen DEATH\n"
+            echo "${Color_Off}You have chosen ${BRed}DEATH${Color_Off}\n"
             echo "you are a brave soul\n"
             difficulty=100000
             ;;
         *)
-            echo "Invalid choice\n"
+            echo "${Color_Off}Invalid choice\n"
             choose_difficulty # recursive call back
             ;;
     esac
@@ -74,9 +78,9 @@ function give_hint {
 
     if [ "$g" -gt "$n" ]
     then
-        echo "The number is less than $guess"
+        echo "The number is ${Red}less than $guess${Color_Off}"
     else
-        echo "The number is greater than $guess"
+        echo "The number is ${Red}greater than $guess${Color_Off}"
     fi
 }
 
@@ -108,28 +112,28 @@ do
     (( total++ ))
     # game here
     echo "I'm thinking of a number between 1 and $difficulty"
-    echo "you will have $ATEMPTS attempts to guess the number"
+    echo "you will have ${URed}$ATEMPTS${Color_Off} attempts to guess the number"
     sleep 0.5
     echo "Good luck!"
     sleep 0.5
     echo
     for i in {1..$ATEMPTS}
     do
-        echo "Guess the number: "
+        echo "Guess the number: ${UGreen}"
         read guess
         if [ $guess -eq $num ]
         then
-            echo "Congratulations! You guessed the number correctly"
+            echo "${BGreen}Congratulations!${Color_Off} You guessed the number correctly"
             (( correct++ ))
             break
         else
-            echo "Sorry, that's not the number"
+            echo "${Color_Off} Sorry, that's not the number"
             give_hint $num $guess
         fi
     done
     echo "The number was $num"
     sleep 1
-    echo "Do you want to play again? (y/n)?"
+    echo "${Cyan}Do you want to play again?${Color_Off} (y/n)?"
     read response
     if [ $response = "n" ]
     then
