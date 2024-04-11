@@ -27,7 +27,8 @@ echo "s - Español"
 echo "j - 日本語"
 read "option2?Enter your choice: "
 
-# declare an associative array to store the voices
+# declare an associative array with -A to store the voices
+# -a flag is used to specify an indexed array
 declare -A voices
 voices=( ["e"]="Alex" ["h"]="Lekha" ["f"]="Thomas" ["s"]="Monica" ["j"]="Kyoko" )
 
