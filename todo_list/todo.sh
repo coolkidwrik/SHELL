@@ -47,12 +47,16 @@ function add_item {
 # Function to remove an item from the list
 function remove_item {
     read "item_num?Enter the item number: "
-    if [ $item_num -gt 0 ] && [ $item_num -le ${#todo_list[@]} ]
+    # get the index of the item
+    index=$(($item_num - 1))
+    if [ $index -ge 0 ] && [ $index -lt ${#todo_list[@]} ]
     then
-        # get the index of the item
-        index=$(($item_num - 1))
-        echo "Removing ${todo_list[$index]}"
-        unset todo_list[$index]
+        # this does not work as expected
+        # unset todo_list[$index] # this will remove the item from the array but will not reindex the array
+        # todo_list=("${todo_list[@]}") # this will reindex the array
+
+        # Remove the item using array slicing
+        todo_list=("${todo_list[@]:0:$index}" "${todo_list[@]:$(($index + 1))}")
     else
         echo "Invalid item number"
     fi
@@ -82,6 +86,7 @@ function handle_options {
         4)
             # truncate the file
             # truncate -s 0 todo.txt
+            # The colon symbol (:) is typically used as a placeholder or null command in shell scripting and produces no output.
             : > todo.txt
 
             # Write the array back to the file
