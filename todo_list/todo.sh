@@ -23,20 +23,21 @@ source ./color.sh
 # Variables:
 ############################################
 declare -a todo_list
+todo_file=todo.txt
 
 # Helper Functions:
 ############################################
 # restore the list from the file
 function restore_list {
-    if [ -f todo.txt ]
+    if [ -f $todo_file ]
     then
         # Read the file into the array
         while IFS= read -r line; do
             todo_list+=("$line")
-        done < todo.txt
+        done < $todo_file
     else
         # Create the file
-        touch todo.txt
+        touch $todo_file
     fi
 }
 
@@ -106,12 +107,12 @@ function handle_options {
         4)
             # truncate the file
             # The colon symbol (:) is typically used as a placeholder or null command in shell scripting and produces no output.
-            : > todo.txt
+            : > $todo_file
 
             # Write the array back to the file
             for item in "${todo_list[@]}"
             do
-                echo "$item" >> todo.txt # append item to the file (this apparently adds a newline character to the end of the item)
+                echo "$item" >> $todo_file # append item to the file (this apparently adds a newline character to the end of the item)
             done
             ;;
         *)

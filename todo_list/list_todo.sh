@@ -12,6 +12,7 @@ source ./color.sh
 # Variables:
 ############################################
 declare -a todo_list
+todo_file=todo.txt
 
 # Helper Functions:
 ############################################
@@ -34,15 +35,15 @@ function display_list {
 # Main:
 ############################################
 # Check if the file exists
-if [ -f todo.txt ]
+if [ -f $todo_file ]
 then
     # Read the file into the array
     while IFS= read -r line; do
         todo_list+=("$line")
-    done < todo.txt
+    done < $todo_file
 else
     # Create the file
-    touch todo.txt
+    touch $todo_file
 fi
 
 display_list
