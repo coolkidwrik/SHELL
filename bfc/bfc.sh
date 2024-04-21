@@ -16,6 +16,11 @@
 
 # How Brain F*ck works:
 # -------------------------------------
+# I learned everything from this video:
+# https://www.youtube.com/watch?v=hdHjjBS4cs8
+
+# Brain F*ck is a minimalist programming language.
+# It has only 8 commands:
 # > increment the data pointer (to point to the next cell to the right).
 # < decrement the data pointer (to point to the next cell to the left).
 # + increment (increase by one) the byte at the data pointer.
