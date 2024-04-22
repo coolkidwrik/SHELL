@@ -102,7 +102,7 @@ function convertToC {
     echo "char *ptr = array;" >> $output_file
 
     # loop through the commands array
-    for (( i=0; i<${#code[@]}; i++ ))
+    for (( i=0; i<((${#code[@]} + 1)); i++ ))
     do
         case ${code[$i]} in
             ">")

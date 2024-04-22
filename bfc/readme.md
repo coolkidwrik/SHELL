@@ -10,3 +10,6 @@ The compiler can be run as follows:
 </pre>
 
 This directory also includes a <a href = "https://en.wikipedia.org/wiki/Brainfuck#:~:text=Hello%20World!,-The%20following%20program&text=%2B%2B%2B%2B%2B%2B%2B%2B%5B%3E%2B%2B,%3E%3E%2B.%3E%2B%2B.">hello_world.bf</a> file that has already been compiled by the program.
+
+##
+Note: To properly compile .bf file, end file on empty line

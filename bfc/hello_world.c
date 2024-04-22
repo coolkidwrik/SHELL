@@ -128,5 +128,10 @@ putchar(*ptr);
 ++ptr;
 ++ptr;
 ++*ptr;
+putchar(*ptr);
+++ptr;
+++*ptr;
+++*ptr;
+putchar(*ptr);
 return 0;
 }
