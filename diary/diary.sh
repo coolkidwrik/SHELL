@@ -8,17 +8,52 @@
 # Variables
 ############################################
 file=".diary.txt" # Since the file name starts with a dot, it will be hidden and not be visible in the directory
-attempts=0
+# just another layer of security
+attempts=3
 password=""
 
 # Functions
 ############################################
 
+function create_password {
+    # Ask for the password to access the diary
+    read -s "password?Create a password to access the diary:"
+    echo ""
+    # confirm the password
+    read -s "password_check?Confirm the password:"
+    echo ""
+    # check if the passwords match
+    if [ $password != $password_check ]
+    then
+        echo "Passwords do not match. Exiting the program."
+        sleep 1
+        echo "re-try creating a password"
+        create_password
+    fi
+
+    # Encrypt the file
+    ./encription/encript.sh $file $password
+}
+
+function create_file {
+    # Create the file
+    echo "you don't have a Diary. Creating one now."
+    sleep 1
+    # create the file
+    touch $file
+    echo "Here is your new diary" > $file
+    # notify the user that the file has been created
+    echo "Diary file created."
+
+    # Ask for a password to access the diary
+    create_password
+}
+
 # Request the password to read the diary
 function request_password() {
     # Check if the password is correct
     # give 3 tries to enter the correct password
-    while [ $attempts != 3 ]; do
+    while [ $attempts != 0 ]; do
         # Ask for the password
         echo "Enter the password to read the diary:"
         read -s password
@@ -29,22 +64,18 @@ function request_password() {
         #check if bad password
         if [ $? -ne 0 ]; then
             echo "Incorrect password. You do not have permission to read the diary."
-            attempts=$((attempts+1))
+            attempts=$((attempts-1))
         else
             break
         fi
     done
 
     # If the password is incorrect after 3 tries, exit the program
-    if [ $attempts = 3 ]; then
+    if [ $attempts = 0 ]; then
         echo "You have exceeded the number of attempts. Exiting the program."
         exit 1
     fi
 }
-
-
-# !!! This function does not work as expected.
-# !!! TODO: Fix this function
 
 # Write to the diary
 function write_diary() {
@@ -53,7 +84,11 @@ function write_diary() {
     # encrypt the file
     # close the text editor
     open -a "TextEdit" $file
-    
+
+    # failed attempts
+    #############################
+    # might be useful to keep these around for reference
+
     # the following code is commented out because it does not work as expected
     # sleep 1
     # # wait for the file to be closed on the text editor before encrypting
@@ -65,8 +100,7 @@ function write_diary() {
 
 
     # Another failed attempt :(
-
-    # Wait for TextEdit to be closed or the file to be closed in TextEdit
+    # # Wait for TextEdit to be closed or the file to be closed in TextEdit
     # while true; do
     #     # Check if TextEdit is running
     #     # osascript is a command line tool for executing AppleScript
@@ -81,8 +115,16 @@ function write_diary() {
     #     fi
     # done
 
-    # Wait for TextEdit to be closed or the file to be closed in TextEdit.
-    while fuser "$file". 2>&1 | grep -q -v "diary.sh"; do
+    # # failed attempt
+    # # Wait for TextEdit to be closed or the file to be closed in TextEdit.
+    # while fuser "$file". 2>&1 | grep -q -v "diary.sh"; do
+    #     sleep 1
+    # done
+    ##############################
+
+    # # Wait for TextEdit to be closed
+    # pgrep searches for processes with the exact name "TextEdit". The -x option ensures that only processes with the exact name "TextEdit" are matched
+    while pgrep -x "TextEdit" > /dev/null; do
         sleep 1
     done
 
@@ -95,6 +137,10 @@ function write_diary() {
 
 # Main
 ############################################
+# check is file exists
+if [ ! -f $file.enc ]; then
+    create_file
+fi
 
 # Request the password to read the diary
 request_password

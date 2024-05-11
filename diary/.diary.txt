@@ -1,7 +1,0 @@
-this is my secret text. No one can find out what it says. 
-
-Modified file line.
-
-Another modification.
-
-Another.
