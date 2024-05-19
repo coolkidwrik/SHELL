@@ -32,11 +32,45 @@
 # ] if the byte at the data pointer is nonzero, then instead of moving the instruction pointer
 # forward to the next command, jump it back to the command after the matching [ command.
 
+# Parse Arguments
+#######################################
+function usage {
+    echo "Usage: bfc <source_file.bf>"
+    echo "Options:"
+    echo "  -c    output the C code"
+    exit 1
+}
 
+# Initialize variables for flags
+flag_C=false
+source_file=""
+
+# Parse command-line arguments
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -c)
+            flag_C=true
+            shift
+            ;;
+        -*)
+            echo "Unknown option: $1"
+            usage
+            ;;
+        *)
+            if [[ -z "$source_file" ]]; then
+                source_file="$1"
+            else
+                echo "Multiple file names provided: $source_file and $1"
+                usage
+            fi
+            shift
+            ;;
+    esac
+done
 
 # Variables
 #######################################
-source_file=$1
+# source_file=$1
 
 # array to store Brain F*ck commands
 # declare -A code #(can't name `commands` because it's a reserved word in zsh. I spent too much time figuring this out :[ )
@@ -50,10 +84,9 @@ output_file=${source_file%.bf}.c  # the % operator removes the .bf extension
 # error check
 function errorCheck {
     # check if the number of arguments is correct
-    if [ $# -ne 1 ]
+    if [ $# -lt 1 ]
     then
-        echo "Usage: bfc <source_file.bf>"
-        exit 1
+        usage
     elif [ ! -f $1 ]
     then
         # check if the source file exists
@@ -141,6 +174,13 @@ function convertToC {
 function compile {
     # compile the C code and output the executable
     gcc $output_file -o ${source_file%.bf}
+
+    # check c flag
+    if ! $flag_C 
+    then
+        # remove the C file
+        rm $output_file
+    fi
 }
 
 # Main
